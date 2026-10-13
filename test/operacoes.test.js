@@ -138,3 +138,51 @@ describe('Bloco 2 – arrays vazios e casos negativos de paridade', () => {
     expect(isImpar(4)).toBe(false);
   });
 });
+
+describe('Bloco 4 – primos, clamp, conversões e inverso', () => {
+  test('1 não é primo (fronteira de n <= 1)', () => {
+    // mata #115 (73:7 ConditionalExpression -> false), #116 (73:7 EqualityOperator n <= 1 -> n < 1)
+    // e #118 (73:22 BooleanLiteral false -> true)
+    expect(isPrimo(1)).toBe(false);
+  });
+
+  test('número composto não é primo', () => {
+    // mata #119 (74:19 ConditionalExpression -> false), #121 (74:19 EqualityOperator i < n -> i >= n),
+    // #123 (74:31 BlockStatement), #125 (75:9 ConditionalExpression -> false),
+    // #127 (75:9 ArithmeticOperator n % i -> n * i) e #128 (75:29 BooleanLiteral false -> true)
+    expect(isPrimo(4)).toBe(false);
+  });
+
+  test('clamp devolve o mínimo quando o valor está abaixo do intervalo', () => {
+    // mata #146 (88:7 ConditionalExpression -> false)
+    expect(clamp(-5, 0, 10)).toBe(0);
+  });
+
+  test('clamp devolve o máximo quando o valor está acima do intervalo', () => {
+    // mata #150 (89:7 ConditionalExpression -> false)
+    expect(clamp(15, 0, 10)).toBe(10);
+  });
+
+  test('isDivisivel retorna false quando há resto', () => {
+    // mata #154 (92:51 ConditionalExpression -> true)
+    expect(isDivisivel(10, 3)).toBe(false);
+  });
+
+  test('converte 100 °C para 212 °F (entrada diferente de zero)', () => {
+    // mata #160 (93:51 ArithmeticOperator 9/5 -> 9*5: daria 932)
+    // e #161 (93:51 ArithmeticOperator celsius*9 -> celsius/9: daria 34,22...)
+    expect(celsiusParaFahrenheit(100)).toBe(212);
+  });
+
+  test('converte 212 °F para 100 °C (entrada diferente de 32)', () => {
+    // mata #163 (94:53 ArithmeticOperator 5/9 -> 5*9: daria 8100)
+    // e #164 (94:53 ArithmeticOperator (f-32)*5 -> (f-32)/5: daria 4)
+    expect(fahrenheitParaCelsius(212)).toBe(100);
+  });
+
+  test('inverso de zero lança a mensagem exata', () => {
+    // mata #168 (96:7 ConditionalExpression -> false, retornaria Infinity)
+    // e #171 (96:32 StringLiteral, mensagem vazia)
+    expect(() => inverso(0)).toThrow('Não é possível inverter o número zero.');
+  });
+});
