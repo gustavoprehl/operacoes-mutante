@@ -232,3 +232,26 @@ describe('Bloco 5 – comparações de borda e mediana', () => {
     expect(medianaArray([4, 1, 3, 2])).toBe(2.5);
   });
 });
+
+describe('Casos de borda que só se distinguem por zero com sinal ou entrada array-like', () => {
+  // Com números "comuns" estes mutantes são indistinguíveis do original; a única
+  // diferença observável é -0 vs +0 (toBe usa Object.is) ou uma entrada sem reduce.
+
+  test('clamp devolve o próprio valor quando ele coincide com o mínimo', () => {
+    // mata #147 (88:7 EqualityOperator valor < min -> valor <= min):
+    // o original devolve valor (-0); o mutante devolve min (+0)
+    expect(clamp(-0, 0, 10)).toBe(-0);
+  });
+
+  test('clamp devolve o próprio valor quando ele coincide com o máximo', () => {
+    // mata #151 (89:7 EqualityOperator valor > max -> valor >= max):
+    // o original devolve valor (+0); o mutante devolve max (-0)
+    expect(clamp(0, -10, -0)).toBe(0);
+  });
+
+  test('produto de coleção vazia retorna 1 pela guarda, sem chamar reduce', () => {
+    // mata #140 (84:7 ConditionalExpression -> false): sem a guarda,
+    // um array-like vazio (sem reduce) lançaria TypeError
+    expect(produtoArray({ length: 0 })).toBe(1);
+  });
+});
