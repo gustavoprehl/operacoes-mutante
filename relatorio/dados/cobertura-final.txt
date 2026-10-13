@@ -1,0 +1,15 @@
+Cobertura final (npm test -- --coverage) - suíte melhorada, 79 testes, todos passando
+Data: 2026-10-13 | Jest 29 / babel-jest
+
+--------------|---------|----------|---------|---------|-------------------
+File          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+--------------|---------|----------|---------|---------|-------------------
+All files     |     100 |      100 |     100 |     100 |
+ operacoes.js |     100 |      100 |     100 |     100 |
+--------------|---------|----------|---------|---------|-------------------
+
+Resumo:
+- Statements: 100%
+- Branches:   100%
+- Functions:  100%
+- Lines:      100%
