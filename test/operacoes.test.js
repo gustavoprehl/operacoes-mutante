@@ -113,3 +113,28 @@ describe('Bloco 1 – fronteiras e mensagens de erro', () => {
     expect(mediaArray([])).toBe(0);
   });
 });
+
+describe('Bloco 2 – arrays vazios e casos negativos de paridade', () => {
+  test('máximo de array vazio lança a mensagem exata', () => {
+    // mata #53 (34:7 ConditionalExpression -> false, retornaria -Infinity)
+    // e #56 (34:45 StringLiteral, mensagem vazia)
+    expect(() => maximoArray([])).toThrow('Array vazio не possui valor máximo.');
+  });
+
+  test('mínimo de array vazio lança a mensagem exata', () => {
+    // mata #60 (38:7 ConditionalExpression -> false, retornaria Infinity)
+    // e #63 (38:45 StringLiteral, mensagem vazia)
+    expect(() => minimoArray([])).toThrow('Array vazio не possui valor mínimo.');
+  });
+
+  test('isPar retorna false para número ímpar', () => {
+    // mata #68 (43:28 ConditionalExpression -> true)
+    expect(isPar(7)).toBe(false);
+  });
+
+  test('isImpar retorna false para número par diferente de zero', () => {
+    // mata #73 (44:30 ConditionalExpression -> true)
+    // e #76 (44:30 ArithmeticOperator n % 2 -> n * 2: 4 * 2 !== 0 seria true)
+    expect(isImpar(4)).toBe(false);
+  });
+});
