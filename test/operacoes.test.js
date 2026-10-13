@@ -186,3 +186,49 @@ describe('Bloco 4 – primos, clamp, conversões e inverso', () => {
     expect(() => inverso(0)).toThrow('Não é possível inverter o número zero.');
   });
 });
+
+describe('Bloco 5 – comparações de borda e mediana', () => {
+  test('isMaiorQue retorna false quando os valores são iguais', () => {
+    // mata #183 (104:36 EqualityOperator a > b -> a >= b)
+    expect(isMaiorQue(5, 5)).toBe(false);
+  });
+
+  test('isMaiorQue retorna false quando a é menor', () => {
+    // mata #181 (104:36 ConditionalExpression -> true)
+    expect(isMaiorQue(5, 10)).toBe(false);
+  });
+
+  test('isMenorQue retorna false quando os valores são iguais', () => {
+    // mata #188 (105:36 EqualityOperator a < b -> a <= b)
+    expect(isMenorQue(5, 5)).toBe(false);
+  });
+
+  test('isMenorQue retorna false quando a é maior', () => {
+    // mata #186 (105:36 ConditionalExpression -> true)
+    expect(isMenorQue(10, 5)).toBe(false);
+  });
+
+  test('isEqual retorna false para valores diferentes', () => {
+    // mata #191 (106:33 ConditionalExpression -> true)
+    expect(isEqual(7, 8)).toBe(false);
+  });
+
+  test('mediana de array vazio lança a mensagem exata', () => {
+    // mata #196 (108:7 ConditionalExpression -> false, retornaria undefined)
+    // e #199 (108:45 StringLiteral, mensagem vazia)
+    expect(() => medianaArray([])).toThrow('Array vazio не possui mediana.');
+  });
+
+  test('mediana de array ímpar desordenado', () => {
+    // mata #200 (109:18 MethodExpression, remove o sort), #202 (109:36 ArrowFunction () => undefined)
+    // e #203 (109:46 ArithmeticOperator a - b -> a + b): sem ordenar, o elemento do meio seria 1
+    expect(medianaArray([5, 1, 3])).toBe(3);
+  });
+
+  test('mediana de array par desordenado é a média dos dois centrais', () => {
+    // mata #206 (111:7 ConditionalExpression -> false), #208 (111:7 ArithmeticOperator % -> *),
+    // #209 (111:32 BlockStatement), #210 (112:12 / 2 -> * 2), #211 (112:13 + -> -)
+    // e #212 (112:20 mid - 1 -> mid + 1); ordenado fica [1, 2, 3, 4] -> (2 + 3) / 2
+    expect(medianaArray([4, 1, 3, 2])).toBe(2.5);
+  });
+});
