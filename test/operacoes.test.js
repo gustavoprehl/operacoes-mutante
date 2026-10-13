@@ -74,3 +74,42 @@ describe('Suíte de Testes Fraca para 50 Operações Aritméticas', () => {
   test('49. deve calcular o triplo de um número', () => { expect(triplo(10)).toBe(30); });
   test('50. deve calcular a metade de um número', () => { expect(metade(20)).toBe(10); });
 });
+
+// ============================================================================
+// Testes adicionados para matar mutantes sobreviventes do StrykerJS.
+// Cada comentário indica: mutante #id (linha:coluna em src/operacoes.js, mutador).
+// ============================================================================
+
+describe('Bloco 1 – fronteiras e mensagens de erro', () => {
+  test('divisão por zero lança a mensagem exata', () => {
+    // mata #11 (8:32 StringLiteral): mensagem trocada por ""
+    expect(() => divisao(5, 0)).toThrow('Divisão por zero não é permitida.');
+  });
+
+  test('raiz quadrada de zero é zero (fronteira de n < 0)', () => {
+    // mata #17 (13:7 EqualityOperator): n < 0 -> n <= 0 lançaria erro para 0
+    expect(raizQuadrada(0)).toBe(0);
+  });
+
+  test('raiz quadrada de negativo lança a mensagem exata', () => {
+    // mata #16 (13:7 ConditionalExpression -> false, retornaria NaN)
+    // e #20 (13:30 StringLiteral, mensagem vazia)
+    expect(() => raizQuadrada(-4)).toThrow('Não é possível calcular a raiz quadrada de um número negativo.');
+  });
+
+  test('fatorial de zero é 1 (fronteira de n < 0)', () => {
+    // mata #26 (18:7 EqualityOperator): n < 0 -> n <= 0 lançaria erro para 0
+    expect(fatorial(0)).toBe(1);
+  });
+
+  test('fatorial de negativo lança a mensagem exata', () => {
+    // mata #25 (18:7 ConditionalExpression -> false, retornaria 1)
+    // e #29 (18:30 StringLiteral, mensagem vazia)
+    expect(() => fatorial(-1)).toThrow('Fatorial não é definido para números negativos.');
+  });
+
+  test('média de array vazio é 0, não NaN', () => {
+    // mata #45 (25:7 ConditionalExpression -> false): 0 / 0 daria NaN
+    expect(mediaArray([])).toBe(0);
+  });
+});
